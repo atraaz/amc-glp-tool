@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexander Medical GLP Tool</title>
+<style>
+:root{--bg:#fff;--bg2:#f7f7f5;--bg3:#f0efeb;--t:#1a1a1a;--t2:#6b6b6b;--t3:#9a9a9a;--b:rgba(0,0,0,.12);--b2:rgba(0,0,0,.22);--bbl:#e6f1fb;--tbl:#0c447c;--bgr:#eaf3de;--tgr:#27500a;--bam:#faeeda;--tam:#633806;--bpu:#eeedfe;--tpu:#3c3489;--wbg:#fff8e6;--wt:#92600a;--wb:#f5c842;--gbg:#eaf3de;--gt:#27500a;--gb:#7db84a;--ibg:#e6f1fb;--it:#0c447c;--ib:#378add;--r:8px;--rl:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--t);background:var(--bg3);min-height:100vh;}
+header{background:var(--bg);border-bottom:1px solid var(--b);padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;}
+.logo{width:32px;height:32px;background:var(--bbl);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--tbl);}
+header h1{font-size:16px;font-weight:600;}
+header span{font-size:13px;color:var(--t2);}
+.main{max-width:860px;margin:0 auto;padding:24px 16px 48px;}
+.tabbar{display:flex;border-bottom:1px solid var(--b);margin-bottom:1.5rem;overflow-x:auto;}
+.tb{padding:9px 16px;font-size:13px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:var(--r) var(--r) 0 0;color:var(--t2);background:transparent;white-space:nowrap;font-family:inherit;}
+.tb.on{border-color:var(--b2);border-bottom:1px solid var(--bg);color:var(--t);font-weight:600;background:var(--bg);margin-bottom:-1px;}
+.pnl{display:none;}.pnl.on{display:block;}
+label{font-size:12px;color:var(--t2);display:block;margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.03em;}
+select,input[type=number]{width:100%;padding:8px 10px;border:1px solid var(--b2);border-radius:var(--r);font-size:14px;background:var(--bg);color:var(--t);font-family:inherit;}
+select:focus,input:focus{outline:none;border-color:#378add;box-shadow:0 0 0 3px rgba(55,138,221,.15);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fld{margin-bottom:12px;}
+.btnp{padding:9px 24px;border:none;border-radius:var(--r);background:var(--t);color:#fff;cursor:pointer;font-size:14px;font-weight:600;margin-bottom:1.25rem;font-family:inherit;}
+.btnp:hover{opacity:.82;}
+.card{background:var(--bg);border:1px solid var(--b);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1rem;}
+.ctitle{font-size:15px;font-weight:600;margin-bottom:12px;}
+.mg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px;}
+.mg4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px;}
+.met{background:var(--bg2);border-radius:var(--r);padding:10px 12px;}
+.mlb{font-size:11px;color:var(--t2);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;font-weight:500;}
+.mvl{font-size:19px;font-weight:700;}
+.msb{font-size:11px;color:var(--t2);margin-top:2px;}
+.ptbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}
+.ptbl th{text-align:left;padding:6px 7px;font-size:11px;color:var(--t2);font-weight:600;border-bottom:1px solid var(--b);text-transform:uppercase;letter-spacing:.03em;}
+.ptbl td{padding:7px 7px;border-bottom:1px solid var(--b);vertical-align:middle;}
+.ptbl tr:last-child td{border-bottom:none;}
+.ptbl tr:hover td{background:var(--bg2);}
+.bdg{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+.bbl{background:var(--bbl);color:var(--tbl);}
+.bgr{background:var(--bgr);color:var(--tgr);}
+.bam{background:var(--bam);color:var(--tam);}
+.bpu{background:var(--bpu);color:var(--tpu);}
+.bred{background:#fee2e2;color:#7f1d1d;}
+.div{border:none;border-top:1px solid var(--b);margin:1rem 0;}
+.res{display:none;}.res.on{display:block;}
+.dsel{display:flex;gap:8px;margin-bottom:1rem;}
+.dbtn{flex:1;padding:9px;border:1px solid var(--b2);border-radius:var(--r);cursor:pointer;font-size:14px;font-weight:500;text-align:center;background:var(--bg2);color:var(--t);font-family:inherit;}
+.dbtn.on{border-color:var(--t);background:var(--t);color:#fff;font-weight:600;}
+.itxt{font-size:13px;color:var(--t2);margin-bottom:1rem;line-height:1.5;}
+.wbox{background:var(--wbg);border:1px solid var(--wb);border-radius:var(--r);padding:9px 12px;font-size:13px;color:var(--wt);margin-bottom:1rem;}
+.gbox{background:var(--gbg);border:1px solid var(--gb);border-radius:var(--r);padding:9px 12px;font-size:13px;color:var(--gt);margin-bottom:1rem;font-weight:500;}
+.cp2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem;}
+.cc{border:1px solid var(--b);border-radius:var(--rl);padding:1rem;background:var(--bg);}
+.cc.alt{border-color:#378add;border-width:2px;}
+.cclb{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600;}
+.rxb{background:var(--ibg);border:1px solid var(--ib);border-radius:var(--r);padding:10px 14px;margin-top:10px;}
+.rxbt{font-size:11px;color:var(--tbl);text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-bottom:4px;}
+.rxbv{font-size:13px;color:var(--t);font-weight:600;line-height:1.5;}
+.rxbs{font-size:12px;color:var(--t2);margin-top:3px;}
+.ubox{background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;}
+.ubox-lbl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;font-weight:700;margin-bottom:4px;}
+.ubox-val{font-size:15px;font-weight:700;}
+.ubox-sub{font-size:12px;color:var(--t2);margin-top:2px;}
+.slb{font-size:13px;font-weight:600;margin-bottom:8px;}
+.fn{font-size:11px;color:var(--t3);margin-top:8px;}
+.diff-box{text-align:center;padding:1.25rem;}
+.diff-lbl{font-size:12px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;}
+.diff-val{font-size:28px;font-weight:700;}
+.diff-sub{font-size:13px;color:var(--t2);margin-top:4px;}
+@media(max-width:600px){.g2,.g3,.cp2{grid-template-columns:1fr;}.mg3,.mg4{grid-template-columns:1fr 1fr;}}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;align-items:center;justify-content:center;padding:16px;}
+.modal-bg.on{display:flex;}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.18);}
+.modal-hdr{padding:1.1rem 1.25rem .8rem;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.modal-hdr h2{font-size:15px;font-weight:700;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--t2);line-height:1;padding:0 4px;}
+.modal-body{padding:1.25rem;}
+.sms-box{background:#f0efeb;border-radius:12px;padding:1rem 1.1rem;font-size:14px;line-height:1.7;color:#1a1a1a;white-space:pre-wrap;word-break:break-word;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;border:1px solid rgba(0,0,0,.1);}
+.copy-btn{display:block;width:100%;margin-top:12px;padding:11px;background:#1a1a1a;color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.copy-btn:hover{opacity:.82;}
+.copy-btn.copied{background:#27500a;}
+.modal-note{font-size:12px;color:var(--t2);margin-top:10px;text-align:center;}
+.sum-btn{display:inline-block;margin-top:4px;padding:8px 18px;border:1.5px solid #378add;border-radius:var(--r);background:#e6f1fb;color:#0c447c;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.sum-btn:hover{background:#d0e8f8;}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Rx</div>
+  <h1>Alexander Medical GLP Tool</h1>
+  <span>MA Reference</span>
+</header>
+<div class="main">
+  <div class="tabbar">
+    <button class="tb on" id="tab-cost"   onclick="showTab('cost')">Cost Estimator</button>
+    <button class="tb"    id="tab-switch" onclick="showTab('switch')">Pharmacy Switch</button>
+    <button class="tb"    id="tab-maint"  onclick="showTab('maint')">Maintenance</button>
+    <button class="tb"    id="tab-units"  onclick="showTab('units')">Unit Reference</button>
+  </div>
+
+  <div class="pnl on" id="pnl-cost">
+    <p class="itxt">Monthly cost by full escalation, micro-dosing, or a single phase. Includes units/week and recommended vial.</p>
+    <div class="dsel">
+      <div class="dbtn on" id="cd-s" onclick="cSetDrug('s')">Semaglutide</div>
+      <div class="dbtn"    id="cd-t" onclick="cSetDrug('t')">Tirzepatide</div>
+    </div>
+    <div class="g2">
+      <div class="fld"><label>Pharmacy</label><select id="cPh" onchange="cLC()"></select></div>
+      <div class="fld"><label>Concentration / Product</label><select id="cCo" onchange="cLV()"></select></div>
+    </div>
+    <div class="g2" id="cViRow" style="display:flex;">
+      <div class="fld"><label>Vial Size</label><select id="cVi"></select></div>
+      <div class="fld"><label>Calculation Mode</label>
+        <select id="cMo" onchange="cTog()">
+          <option value="esc">Full escalation schedule</option>
+          <option value="mic">Micro-dosing (stay at intro dose)</option>
+          <option value="ph">Single phase</option>
+        </select>
+      </div>
+    </div>
+    <div id="cViNote" class="gbox" style="display:none;font-size:12px;">&#9432; For full escalation, vial size is auto-selected: <strong>smallest first</strong> (sensitivity protection), then the <strong>most cost-effective size</strong> for all refills.</div>
+    <div id="cPW" class="fld" style="display:none;"><label>Phase</label><select id="cPh2"></select></div>
+    <button class="btnp" onclick="doCC()">Calculate</button>
+    <div class="res" id="cRes"><div id="cOut"></div></div>
+  </div>
+
+  <div class="pnl" id="pnl-switch">
+    <p class="itxt">Enter the patient's current prescription and weekly dose — the tool ranks every alternative by monthly cost so you can instantly see the best switch.</p>
+    <div class="dsel">
+      <div class="dbtn on" id="sd-s" onclick="sSetDrug('s')">Semaglutide</div>
+      <div class="dbtn"    id="sd-t" onclick="sSetDrug('t')">Tirzepatide</div>
+    </div>
+    <p class="slb" style="margin-top:0;">Current Prescription</p>
+    <div class="g3">
+      <div class="fld"><label>Pharmacy</label><select id="sFP" onchange="sLFC()"></select></div>
+      <div class="fld"><label>Concentration / Product</label><select id="sFC" onchange="sLFV()"></select></div>
+      <div class="fld"><label>Vial Size</label><select id="sFV"></select></div>
+    </div>
+    <div class="fld" style="max-width:200px;margin-bottom:.5rem;"><label>Weekly Dose (units)</label><input type="number" id="sDose" step="1" value="20" min="1" max="100" oninput="sShowU()"></div>
+    <div id="sUD" style="display:none;margin-bottom:1rem;"></div>
+    <!-- hidden selects kept for buildSwitchSummary compatibility -->
+    <select id="sTP" style="display:none;"></select>
+    <select id="sTC" style="display:none;"></select>
+    <select id="sTV" style="display:none;"></select>
+    <button class="btnp" onclick="doCS()">Find Best Switch</button>
+    <div class="res" id="sRes"><div id="sOut"></div></div>
+  </div>
+
+  <div class="pnl" id="pnl-maint">
+    <p class="itxt">For patients at goal weight. Maintenance = same dose injected every other week (2 injections/month).</p>
+    <div class="dsel">
+      <div class="dbtn on" id="md-s" onclick="mSetDrug('s')">Semaglutide</div>
+      <div class="dbtn"    id="md-t" onclick="mSetDrug('t')">Tirzepatide</div>
+    </div>
+    <div class="g2">
+      <div class="fld"><label>Pharmacy</label><select id="mPh" onchange="mLC()"></select></div>
+      <div class="fld"><label>Concentration / Product</label><select id="mCo" onchange="mLV()"></select></div>
+    </div>
+    <div class="g2">
+      <div class="fld"><label>Vial Size</label><select id="mVi"></select></div>
+      <div class="fld"><label>Maintenance Dose (mg)</label><input type="number" id="mDose" step="0.1" value="1.0" min="0.1" max="20" oninput="mShowU()"></div>
+    </div>
+    <div id="mUD" style="display:none;margin-bottom:1rem;"></div>
+    <button class="btnp" onclick="doCM()">Calculate</button>
+    <div class="res" id="mRes"><div id="mOut"></div></div>
+  </div>
+
+  <div class="pnl" id="pnl-units">
+    <p class="itxt">Units/week for all pharmacies using standard Val Vista phase doses. Individual phases requiring &gt;100 units are hidden — patients should not exceed 100 units per injection. Best vial = lowest $/month for each dose.</p>
+    <div class="dsel">
+      <div class="dbtn on" id="ud-s" onclick="uSetDrug('s')">Semaglutide</div>
+      <div class="dbtn"    id="ud-t" onclick="uSetDrug('t')">Tirzepatide</div>
+    </div>
+    <div id="uOut"></div>
+  </div>
+</div>
+
+<!-- PATIENT SUMMARY MODAL -->
+<div class="modal-bg" id="sumModal" onclick="if(event.target===this)closeSummary()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2>📋 Patient Summary — Ready to Text</h2>
+      <button class="modal-close" onclick="closeSummary()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="sms-box" id="smsText"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copySMS()">Copy Message</button>
+      <p class="modal-note">Paste directly into a text message or patient communication.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+var cD='s',sD='s',mD='s',uD='s';
+var PH={
+  s:[{l:'Phase 1',mg:.3,wk:3},{l:'Phase 2',mg:.6,wk:3},{l:'Phase 3',mg:1.2,wk:3},{l:'Phase 4',mg:1.6,wk:3},{l:'Phase 5',mg:2.1,wk:3}],
+  t:[{l:'Phase 1',mg:2.5,wk:3},{l:'Phase 2',mg:5,wk:3},{l:'Phase 3',mg:7.5,wk:3},{l:'Phase 4',mg:10,wk:3},{l:'Phase 5',mg:12.5,wk:3},{l:'Phase 6',mg:15,wk:3}]
+};
+var DB={
+  s:{
+    'Val Vista':{badge:'bam',disc:1,ship:0,note:'Val Vista Semaglutide fully discontinued. Select as current pharmacy to convert patient to a new pharmacy.',pr:[{n:'2.5 mg/mL (discontinued)',c:2.5,v:[{s:'5 mL (12.5 mg)',mg:12.5,p:225}]}]},
+    'Empower':{badge:'bgr',disc:0,ship:0,pr:[
+      {n:'1 mg/mL (1/0.5)',c:1,v:[{s:'1 mL (1 mg)',mg:1,p:86.63},{s:'2.5 mL (2.5 mg)',mg:2.5,p:108.85}]},
+      {n:'5 mg/mL (5/0.5)',c:5,v:[{s:'1 mL (5 mg)',mg:5,p:120.94},{s:'2.5 mL (12.5 mg)',mg:12.5,p:200.83}]}
+    ]},
+    'City Drugs':{badge:'bam',disc:0,ship:0,pr:[{n:'2.7 mg/mL + Glycine (ship incl.)',c:2.7,v:[{s:'2 mL (5.4 mg)',mg:5.4,p:169},{s:'4 mL (10.8 mg)',mg:10.8,p:269}]}]},
+    'Esatto':{badge:'bpu',disc:0,ship:0,pr:[{n:'Sema + Lysine 2.5 mg/mL',c:2.5,v:[{s:'2.5 mL (6.25 mg)',mg:6.25,p:149},{s:'2.5 mL x2 (12.5 mg)',mg:12.5,p:249}]}]},
+    'Pure Path':{badge:'bam',disc:1,ship:0,pr:[{n:'Sema+B6 3/10 mg/mL',c:3,v:[{s:'2 mL (6 mg)',mg:6,p:165},{s:'4 mL (12 mg)',mg:12,p:225}]}]}
+  },
+  t:{
+    'Val Vista':{badge:'bbl',disc:0,ship:0,pr:[
+      {n:'Tirz/B6 10 mg/mL',c:10,v:[{s:'2 mL (20 mg)',mg:20,p:225}]},
+      {n:'Tirz/B6 20 mg/mL',c:20,v:[{s:'3 mL (60 mg)',mg:60,p:550}]}
+    ]},
+    'Empower':{badge:'bgr',disc:0,ship:0,pr:[
+      {n:'Tirz/Niacinamide 8/2 mg/mL',c:8,v:[{s:'2.5 mL (20 mg)',mg:20,p:172.20}]},
+      {n:'Tirz/Niacinamide 17/2 mg/mL',c:17,v:[{s:'2 mL (34 mg)',mg:34,p:282.30},{s:'4 mL (68 mg)',mg:68,p:511.68}]}
+    ]},
+    'City Drugs':{badge:'bam',disc:0,ship:0,pr:[{n:'Tirz 17 mg/mL + Glycine (ship incl.)',c:17,v:[{s:'2 mL (34 mg)',mg:34,p:259},{s:'4 mL (68 mg)',mg:68,p:359}]}]},
+    'Esatto':{badge:'bpu',disc:0,ship:0,pr:[
+      {n:'Tirz/Niacinamide 12.5/2 mg/mL',c:12.5,v:[{s:'1.25 mL (15.6 mg)',mg:15.625,p:189},{s:'2.5 mL (31.25 mg)',mg:31.25,p:275},{s:'5 mL (62.5 mg)',mg:62.5,p:495}]},
+      {n:'Tirz/Lysine 12.5/25 mg/mL',c:12.5,v:[{s:'1.25 mL (15.6 mg)',mg:15.625,p:189},{s:'2.5 mL (31.25 mg)',mg:31.25,p:275},{s:'5 mL (62.5 mg)',mg:62.5,p:495}]},
+      {n:'Tirz/Sema 9/0.6 mg/mL',c:9,v:[{s:'1.25 mL (11.25 mg)',mg:11.25,p:139},{s:'2.5 mL (22.5 mg)',mg:22.5,p:199},{s:'5 mL (45 mg)',mg:45,p:395}]}
+    ]},
+    'Pure Path':{badge:'bam',disc:1,ship:0,pr:[{n:'Tirz+B6 17/10 mg/mL',c:17,v:[{s:'2 mL (34 mg)',mg:34,p:275},{s:'4 mL (68 mg)',mg:68,p:500}]}]}
+  }
+};
+
+function showTab(t){
+  ['cost','switch','maint','units'].forEach(function(x){
+    document.getElementById('tab-'+x).classList.remove('on');
+    document.getElementById('pnl-'+x).classList.remove('on');
+  });
+  document.getElementById('tab-'+t).classList.add('on');
+  document.getElementById('pnl-'+t).classList.add('on');
+  if(t==='units') doRU();
+}
+function pks(d){return Object.keys(DB[d]);}
+function apks(d){return Object.keys(DB[d]).filter(function(k){return !DB[d][k].disc;});}
+function gpr(d,ph){return DB[d][ph].pr;}
+function gv(d,ph,pi){return gpr(d,ph)[pi].v;}
+function gsh(d,ph){return DB[d][ph].ship||0;}
+function uu(mg,conc){return Math.round((mg/conc)*100);}
+function fvol(v){return v.toFixed(3).replace(/0+$/,'').replace(/\.$/,'')+' mL';}
+function fwks(w){return w.toFixed(1)+' wks (~'+Math.round(w*7)+'d)';}
+function calcCPM(price,vMg,wMg,sh){return (price/(vMg/wMg)*4.33)+(sh?(sh/((vMg/wMg)/4.33)):0);}
+function bestV(d,ph,pi,wMg){
+  var sh=gsh(d,ph),vs=gv(d,ph,pi),best=null,bc=Infinity;
+  vs.forEach(function(v,i){if(v.mg>=wMg){var c=calcCPM(v.p,v.mg,wMg,sh);if(c<bc){bc=c;best={v:v,i:i,c:c};}}});
+  if(!best){var lv=vs[vs.length-1];best={v:lv,i:vs.length-1,c:null};}
+  return best;
+}
+function rxBox(d,ph,pi,wMg){
+  var pr=gpr(d,ph)[pi],sh=gsh(d,ph),u=uu(wMg,pr.c),vol=fvol(wMg/pr.c),b=bestV(d,ph,pi,wMg);
+  var cp=b.c?'$'+b.c.toFixed(0)+'/mo':'—',dur=b.v.mg>=wMg?fwks(b.v.mg/wMg):'&lt;1 wk';
+  return '<div class="rxb"><div class="rxbt">Rx Summary</div><div class="rxbv">'+(d==='s'?'Semaglutide':'Tirzepatide')+' '+pr.n+' &mdash; <span style="font-size:16px;"'+(u>100?' style="color:#a32d2d;"':'')+'>'+u+' units/week</span> ('+vol+')</div><div class="rxbs">Best vial: '+b.v.s+' &nbsp;&middot;&nbsp; '+cp+' &nbsp;&middot;&nbsp; lasts '+dur+'</div></div>';
+}
+function uBox(label,u,vol,mg){
+  var over=u>100;
+  return '<div class="ubox"><div class="ubox-lbl">'+label+'</div>'+
+    '<div class="ubox-val" style="color:'+(over?'#a32d2d':'#1a1a1a')+';">'+u+' units &nbsp;<span style="font-size:13px;font-weight:400;color:#6b6b6b;">'+vol+'</span></div>'+
+    '<div class="ubox-sub">'+(over?'&#9888; Exceeds 100-unit limit — select a higher concentration':mg+' mg delivered &middot; U-100 syringe (1 unit = 0.01 mL)')+'</div></div>';
+}
+function fillS(id,items,vf,tf){
+  var s=document.getElementById(id);s.innerHTML='';
+  items.forEach(function(x,i){var o=document.createElement('option');o.value=vf(x,i);o.textContent=tf(x,i);s.appendChild(o);});
+}
+function sumBtn(fn){
+  return '<br><button class="sum-btn" onclick="'+fn+'">📋 Generate Patient Summary</button>';
+}
+
+/* MODAL */
+var lastSMS='';
+function showSummary(txt){
+  lastSMS=txt;
+  document.getElementById('smsText').textContent=txt;
+  document.getElementById('copyBtn').textContent='Copy Message';
+  document.getElementById('copyBtn').classList.remove('copied');
+  document.getElementById('sumModal').classList.add('on');
+}
+function closeSummary(){document.getElementById('sumModal').classList.remove('on');}
+function copySMS(){
+  navigator.clipboard.writeText(lastSMS).then(function(){
+    var btn=document.getElementById('copyBtn');
+    btn.textContent='✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy Message';btn.classList.remove('copied');},2500);
+  });
+}
+
+/* SUMMARY BUILDERS */
+function buildCostSummary(){
+  var ph=document.getElementById('cPh').value,pi=parseInt(document.getElementById('cCo').value),vi=parseInt(document.getElementById('cVi').value);
+  var mode=document.getElementById('cMo').value,v=gv(cD,ph,pi)[vi],sh=gsh(cD,ph),pr=gpr(cD,ph)[pi],phases=PH[cD];
+  var drugName=cD==='s'?'Semaglutide':'Tirzepatide';
+  var lines=[];
+  lines.push('Hi! Here is a summary of your '+drugName+' prescription from Alexander Medical:');
+  lines.push('');
+  lines.push('Pharmacy: '+ph);
+  lines.push('Medication: '+drugName+' '+pr.n);
+  lines.push('Vial: '+v.s+' ($'+v.p+')');
+  lines.push('');
+  if(mode==='mic'){
+    var dose=phases[0].mg,u=uu(dose,pr.c),vol=fvol(dose/pr.c),dur=v.mg/dose,cpm=calcCPM(v.p,v.mg,dose,sh);
+    lines.push('Dosing: Micro-dosing — staying at intro dose of '+dose+' mg/week');
+    lines.push('Inject: '+u+' units ('+vol+') once per week');
+    lines.push('Est. monthly cost: ~$'+cpm.toFixed(0));
+    lines.push('Your vial will last approx. '+dur.toFixed(1)+' weeks (~'+Math.round(dur*7)+' days)');
+  } else if(mode==='ph'){
+    var pi2=parseInt(document.getElementById('cPh2').value),phase=phases[pi2];
+    var dose=phase.mg,u=uu(dose,pr.c),vol=fvol(dose/pr.c),dur=v.mg/dose,cpm=calcCPM(v.p,v.mg,dose,sh);
+    lines.push('Current phase: '+phase.l+' — '+dose+' mg/week');
+    lines.push('Inject: '+u+' units ('+vol+') once per week');
+    lines.push('Est. monthly cost: ~$'+cpm.toFixed(0));
+    lines.push('Your vial will last approx. '+dur.toFixed(1)+' weeks (~'+Math.round(dur*7)+' days)');
+  } else {
+    // Recalculate optimal vial strategy for summary
+    var allVials2=pr.v;
+    var bySize2=allVials2.slice().sort(function(a,b){return a.mg-b.mg;});
+    var sVial=bySize2[0];
+    var rVial=allVials2.reduce(function(best,v2){return ((v2.p+sh)/v2.mg)<((best.p+sh)/best.mg)?v2:best;});
+    var mgLeft2=sVial.mg,totalVials=1,curVial2=sVial,totalCost2=sVial.p,vialList=[sVial];
+    phases.forEach(function(p){
+      for(var w=0;w<p.wk;w++){
+        if(mgLeft2<p.mg-0.0001){totalVials++;curVial2=rVial;mgLeft2=rVial.mg;totalCost2+=rVial.p;vialList.push(rVial);}
+        mgLeft2=parseFloat((mgLeft2-p.mg).toFixed(4));
+      }
+    });
+    totalCost2+=(sh?sh*totalVials:0);
+    var sameVial2=sVial.s===rVial.s;
+    lines.push('Recommended vial order:');
+    lines.push('  Starter (Vial #1): '+sVial.s+' — $'+sVial.p+(sh?' +$'+sh+' ship':''));
+    if(!sameVial2) lines.push('  Refill vials: '+rVial.s+' — $'+rVial.p+(sh?' +$'+sh+' ship':'')+' (best value per mg)');
+    lines.push('');
+    lines.push('Estimated monthly cost at each phase:');
+    phases.forEach(function(p){
+      var over=uu(p.mg,pr.c)>100;
+      if(over){lines.push('  '+p.l+': requires higher concentration product');return;}
+      var u=uu(p.mg,pr.c),vol=fvol(p.mg/pr.c);
+      var cpmS=calcCPM(sVial.p,sVial.mg,p.mg,sh),cpmR=calcCPM(rVial.p,rVial.mg,p.mg,sh);
+      if(sameVial2){
+        lines.push('  '+p.l+' — '+p.mg+' mg/wk: ~$'+cpmS.toFixed(0)+'/mo  |  '+u+' units ('+vol+')');
+      } else {
+        lines.push('  '+p.l+' — '+p.mg+' mg/wk: ~$'+cpmS.toFixed(0)+'/mo (starter) / ~$'+cpmR.toFixed(0)+'/mo (refill)  |  '+u+' units ('+vol+')');
+      }
+    });
+    lines.push('');
+    lines.push('Injection schedule (3 weeks per phase):');
+    phases.forEach(function(p){
+      var over=uu(p.mg,pr.c)>100;
+      if(over){lines.push('  '+p.l+': requires higher concentration product');return;}
+      var u=uu(p.mg,pr.c),vol=fvol(p.mg/pr.c);
+      lines.push('  '+p.l+' ('+p.mg+' mg): '+u+' units ('+vol+') weekly for 3 weeks');
+    });
+    lines.push('');
+    lines.push('Total vials: '+totalVials+' ('+vialList.map(function(v2,i){return '#'+(i+1)+': '+v2.s;}).join(', ')+')');
+    lines.push('Est. total cost: ~$'+totalCost2.toFixed(0));
+  }
+  if(sh) lines.push('Note: +$'+sh+' shipping per order applies.');
+  lines.push('');
+  lines.push('Questions? Call or text our office anytime.');
+  showSummary(lines.join('\n'));
+}
+
+function buildSwitchSummary(){
+  var uIn=parseInt(document.getElementById('sDose').value)||20;
+  var fp=document.getElementById('sFP').value,fi=parseInt(document.getElementById('sFC').value);
+  var tp=document.getElementById('sTP').value,ti=parseInt(document.getElementById('sTC').value),tvi=parseInt(document.getElementById('sTV').value);
+  var tv2=gv(sD,tp,ti)[tvi];
+  var fPr=gpr(sD,fp)[fi],tPr=gpr(sD,tp)[ti];
+  var mgDose=parseFloat((uIn*fPr.c/100).toFixed(4));
+  var tUnitsEq=Math.round((mgDose/tPr.c)*100);
+  var tcp=calcCPM(tv2.p,tv2.mg,mgDose,gsh(sD,tp));
+  var tb=bestV(sD,tp,ti,mgDose);
+  var drugName=sD==='s'?'Semaglutide':'Tirzepatide';
+  var diff=tcp-calcCPM(gv(sD,fp,fi)[0].p,gv(sD,fp,fi)[0].mg,mgDose,gsh(sD,fp));
+  var lines=[];
+  lines.push('Hi! Here is a summary of your updated '+drugName+' prescription from Alexander Medical:');
+  lines.push('');
+  lines.push('Former pharmacy: '+fp);
+  lines.push('');
+  lines.push('Your new pharmacy: '+tp);
+  lines.push('Medication: '+drugName+' '+tPr.n);
+  lines.push('');
+  lines.push('Your dose stays the same at '+mgDose+' mg per week.');
+  lines.push('');
+  lines.push('With your new prescription you will be injecting '+tUnitsEq+' units ('+fvol(mgDose/tPr.c)+'), which will deliver '+mgDose+' mg per week.');
+  lines.push('Please refer to your bottle for more detailed dosing instructions.');
+  lines.push('');
+  lines.push('Est. monthly cost: ~$'+tcp.toFixed(0));
+  if(tb.v) lines.push('Recommended vial: '+tb.v.s);
+  if(diff<0) lines.push('Good news — this switch saves you approximately $'+Math.abs(diff).toFixed(0)+' per month!');
+  if(gsh(sD,tp)) lines.push('');
+  if(gsh(sD,tp)) lines.push('Note: '+tp+' charges +$'+gsh(sD,tp)+' shipping per order.');
+  lines.push('');
+  lines.push('Questions? Call or text our office anytime.');
+  showSummary(lines.join('\n'));
+}
+
+function buildMaintSummary(){
+  var ph=document.getElementById('mPh').value,pi=parseInt(document.getElementById('mCo').value),vi=parseInt(document.getElementById('mVi').value);
+  var dose=parseFloat(document.getElementById('mDose').value)||1.0;
+  var v=gv(mD,ph,pi)[vi],sh=gsh(mD,ph),pr=gpr(mD,ph)[pi];
+  var u=uu(dose,pr.c),vol=fvol(dose/pr.c);
+  var durWks=(v.mg/dose)*2,mCost=(v.p/(v.mg/dose))*2;
+  var wCost=calcCPM(v.p,v.mg,dose,sh),sav=wCost-mCost;
+  var b=bestV(mD,ph,pi,dose),bMC=(b.v.p/(b.v.mg/dose))*2,bDur=(b.v.mg/dose)*2;
+  var drugName=mD==='s'?'Semaglutide':'Tirzepatide';
+  var lines=[];
+  lines.push('Hi! Here is a summary of your '+drugName+' maintenance plan from Alexander Medical:');
+  lines.push('');
+  lines.push('Great news — you have reached your goal weight!');
+  lines.push('You are now moving to a maintenance schedule.');
+  lines.push('');
+  lines.push('Pharmacy: '+ph);
+  lines.push('Medication: '+drugName+' '+pr.n);
+  lines.push('Maintenance dose: '+dose+' mg every other week');
+  lines.push('');
+  lines.push('Inject: '+u+' units ('+vol+') every other week (2 injections/month)');
+  lines.push('');
+  lines.push('Best vial: '+b.v.s);
+  lines.push('  Est. monthly cost: ~$'+bMC.toFixed(0));
+  lines.push('  Vial lasts approx. '+fwks(bDur));
+  lines.push('');
+  lines.push('This saves you ~$'+sav.toFixed(0)+'/month compared to weekly dosing.');
+  if(sh) lines.push('Note: +$'+sh+' shipping per order applies.');
+  lines.push('');
+  lines.push('Questions? Call or text our office anytime.');
+  showSummary(lines.join('\n'));
+}
+
+/* COST */
+function cSetDrug(d){cD=d;document.getElementById('cd-s').classList.toggle('on',d==='s');document.getElementById('cd-t').classList.toggle('on',d==='t');cInit();document.getElementById('cRes').classList.remove('on');}
+function cInit(){fillS('cPh',apks(cD),function(x){return x;},function(x){return x;});cLC();fillS('cPh2',PH[cD],function(x,i){return i;},function(x){return x.l+' ('+x.mg+' mg/wk)';});}
+function cLC(){fillS('cCo',gpr(cD,document.getElementById('cPh').value),function(x,i){return i;},function(x){return x.n;});cLV();}
+function cLV(){var ph=document.getElementById('cPh').value,pi=parseInt(document.getElementById('cCo').value);fillS('cVi',gv(cD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});}
+function cTog(){
+  var mode=document.getElementById('cMo').value;
+  document.getElementById('cPW').style.display=mode==='ph'?'block':'none';
+  document.getElementById('cViRow').style.display=mode==='esc'?'none':'flex';
+  document.getElementById('cViNote').style.display=mode==='esc'?'block':'none';
+}
+function doCC(){
+  var ph=document.getElementById('cPh').value,pi=parseInt(document.getElementById('cCo').value),vi=parseInt(document.getElementById('cVi').value);
+  var mode=document.getElementById('cMo').value,v=gv(cD,ph,pi)[vi],sh=gsh(cD,ph),pr=gpr(cD,ph)[pi],phases=PH[cD],html='';
+  function single(dose,lbl){
+    var u=uu(dose,pr.c),vol=fvol(dose/pr.c),dur=v.mg/dose,cp=calcCPM(v.p,v.mg,dose,sh),over=u>100;
+    return '<div class="card"><div class="ctitle">'+lbl+' &mdash; '+dose+' mg/week</div>'+
+      '<div class="mg3"><div class="met"><div class="mlb">Monthly Cost</div><div class="mvl">$'+cp.toFixed(0)+'</div></div>'+
+      '<div class="met"><div class="mlb">Vial Lasts</div><div class="mvl">'+dur.toFixed(1)+' wks</div><div class="msb">~'+Math.round(dur*7)+' days</div></div>'+
+      '<div class="met"><div class="mlb">Units / Week</div><div class="mvl" '+(over?'style="color:#a32d2d;"':'')+'>'+u+' units</div><div class="msb">'+vol+(over?' &#9888;':'')+' </div></div></div>'+
+      rxBox(cD,ph,pi,dose)+(sh?'<div class="wbox" style="margin-top:10px;">&#9888; +$'+sh+' shipping/order</div>':'')+'<p class="fn" style="margin-top:10px;">U-100 &middot; 1 unit = 0.01 mL &middot; 4.33 wks/month</p>'+sumBtn('buildCostSummary()')+'</div>';
+  }
+  if(mode==='mic') html=single(phases[0].mg,'Micro-dosing');
+  else if(mode==='ph'){var pi2=parseInt(document.getElementById('cPh2').value);html=single(phases[pi2].mg,phases[pi2].l);}
+  else{
+    // --- Optimal vial sequence: smallest first, then cheapest $/mg for refills ---
+    var allVials=pr.v; // array of {s, mg, p}
+    // Sort by mg ascending to find smallest
+    var bySize=allVials.slice().sort(function(a,b){return a.mg-b.mg;});
+    var starterVial=bySize[0];
+    // Best $/mg vial for refills (price per mg, accounting for shipping amortized over vial)
+    var refillVial=allVials.reduce(function(best,v2){
+      var cpMg=(v2.p+sh)/v2.mg;
+      var bpMg=(best.p+sh)/best.mg;
+      return cpMg<bpMg?v2:best;
+    });
+
+    // --- Build week-by-week injection log using mixed vial strategy ---
+    var weeks=[], vialNum=1, totw=0, over100phases=[], totalVialCost=0;
+    var currentVial=starterVial, mgLeft=starterVial.mg;
+    totalVialCost+=starterVial.p;
+    var vialAssigned=[starterVial]; // track which vial object was used for each vialNum
+
+    phases.forEach(function(p){
+      var over=uu(p.mg,pr.c)>100;
+      if(over){over100phases.push(p.l);totw+=p.wk;for(var w=0;w<p.wk;w++)weeks.push({skip:true,phaseLbl:p.l,phaseMg:p.mg});return;}
+      for(var w=0;w<p.wk;w++){
+        totw++;
+        var newVial=false;
+        if(mgLeft<p.mg-0.0001){
+          vialNum++;
+          currentVial=refillVial;
+          mgLeft=refillVial.mg;
+          totalVialCost+=refillVial.p;
+          vialAssigned.push(refillVial);
+          newVial=true;
+        }
+        var before=mgLeft;
+        mgLeft=parseFloat((mgLeft-p.mg).toFixed(4));
+        weeks.push({wk:totw,phaseLbl:p.l,phaseMg:p.mg,vialNum:vialNum,vialObj:currentVial,mgBefore:before,mgAfter:mgLeft,newVial:newVial,over:false,skip:false});
+      }
+    });
+    var finalVialCount=vialNum;
+    var totalSpend=totalVialCost+(sh?sh*finalVialCount:0);
+    // Build vial order summary string for header
+    var vialOrderParts=[];
+    var prev=null,cnt=0;
+    vialAssigned.forEach(function(vobj,i){
+      if(prev&&vobj.s===prev.s){cnt++;}
+      else{if(prev)vialOrderParts.push(cnt>1?cnt+'x '+prev.s:'1x '+prev.s);prev=vobj;cnt=1;}
+    });
+    if(prev)vialOrderParts.push(cnt>1?cnt+'x '+prev.s:'1x '+prev.s);
+
+    // --- Build vial blocks ---
+    // Group weeks by vialNum
+    var vialBlocks={};
+    weeks.forEach(function(wk){
+      if(wk.skip) return;
+      if(!vialBlocks[wk.vialNum]) vialBlocks[wk.vialNum]={vialNum:wk.vialNum,wks:[]};
+      vialBlocks[wk.vialNum].wks.push(wk);
+    });
+
+    var vialHtml='';
+    Object.keys(vialBlocks).forEach(function(vn){
+      var blk=vialBlocks[vn];
+      var vObj=vialAssigned[parseInt(vn)-1]; // the actual vial object used for this vial number
+      var firstWk=blk.wks[0], lastWk=blk.wks[blk.wks.length-1];
+      var mgUsed=parseFloat((vObj.mg-lastWk.mgAfter).toFixed(4));
+      var pct=Math.min(100,(mgUsed/vObj.mg)*100);
+      var remaining=lastWk.mgAfter;
+      var isLast=parseInt(vn)===finalVialCount;
+      var isStarter=parseInt(vn)===1;
+      var weekRange='Week '+firstWk.wk+(blk.wks.length>1?' – Week '+lastWk.wk:'');
+
+      // rows for this vial's injections grouped by phase
+      var phaseRows='', curPhase='', phStart=0, phEnd=0;
+      var phaseGroups=[];
+      blk.wks.forEach(function(wk,i){
+        if(wk.phaseLbl!==curPhase){
+          if(curPhase) phaseGroups.push({lbl:curPhase,mg:blk.wks[i-1].phaseMg,start:phStart,end:phEnd});
+          curPhase=wk.phaseLbl; phStart=wk.wk; phEnd=wk.wk;
+        } else { phEnd=wk.wk; }
+      });
+      phaseGroups.push({lbl:curPhase,mg:blk.wks[blk.wks.length-1].phaseMg,start:phStart,end:phEnd});
+
+      phaseGroups.forEach(function(pg){
+        var numWks=pg.end-pg.start+1;
+        var u=uu(pg.mg,pr.c),vol=fvol(pg.mg/pr.c);
+        var wkLabel=numWks===1?'Week '+pg.start:'Weeks '+pg.start+'–'+pg.end;
+        var cpm=calcCPM(vObj.p,vObj.mg,pg.mg,sh);
+        var vialDur=fwks(vObj.mg/pg.mg);
+        phaseRows+='<tr>'+
+          '<td style="padding-left:8px;"><span style="font-weight:600;">'+pg.lbl+'</span><span style="color:#6b6b6b;font-size:12px;">  '+wkLabel+'</span></td>'+
+          '<td>'+pg.mg+' mg</td>'+
+          '<td><span class="bdg bbl">'+u+'u</span> <span style="font-size:11px;color:#6b6b6b;">'+vol+'</span></td>'+
+          '<td style="font-size:12px;color:#6b6b6b;">'+numWks+' inj · '+(pg.mg*numWks).toFixed(2)+' mg used</td>'+
+          '<td style="font-weight:600;color:#27500a;font-size:13px;white-space:nowrap;">~$'+cpm.toFixed(0)+'/mo</td>'+
+          '<td style="font-size:12px;color:#6b6b6b;white-space:nowrap;">'+vialDur+'/vial</td>'+
+          '</tr>';
+      });
+
+      vialHtml+='<div style="border:2px solid '+(isStarter?'#378add':'#e2e6ea')+';border-radius:12px;margin-bottom:12px;overflow:hidden;">'+
+        '<div style="background:'+(isStarter?'#e6f1fb':'#f7f7f5')+';padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            '<span style="font-size:15px;font-weight:700;color:'+(isStarter?'#0c447c':'#1a1a1a')+';">Vial #'+vn+'</span>'+
+            (isStarter?'<span class="bdg" style="background:#dbeafe;color:#1e40af;font-size:10px;">Starter</span>':'<span class="bdg" style="background:#d1fae5;color:#065f46;font-size:10px;">Refill</span>')+
+            '<span style="font-size:12px;color:#6b6b6b;">'+vObj.s+' · $'+vObj.p+(sh?' +$'+sh+' ship':'')+'</span>'+
+          '</div>'+
+          '<div style="font-size:12px;font-weight:600;color:#6b6b6b;">'+weekRange+'</div>'+
+        '</div>'+
+        '<div style="padding:10px 14px 4px;">'+
+          '<div style="display:flex;justify-content:space-between;font-size:11px;color:#6b6b6b;margin-bottom:4px;">'+
+            '<span>'+mgUsed.toFixed(2)+' mg used of '+vObj.mg+' mg</span>'+
+            '<span style="color:'+(isLast&&remaining>0?'#27500a':'#6b6b6b')+';">'+
+              (isLast&&remaining>0?remaining.toFixed(2)+' mg remaining after all phases':'Empty after '+blk.wks.length+' injection'+(blk.wks.length>1?'s':''))+
+            '</span>'+
+          '</div>'+
+          '<div style="height:10px;background:#e9ecef;border-radius:99px;overflow:hidden;">'+
+            '<div style="height:100%;width:'+pct.toFixed(1)+'%;background:'+(isLast&&remaining>0?'#7db84a':'#378add')+';border-radius:99px;"></div>'+
+          '</div>'+
+        '</div>'+
+        '<div style="padding:4px 14px 12px;overflow-x:auto;">'+
+          '<table class="ptbl" style="margin-top:6px;">'+
+            '<thead><tr><th>Phase</th><th>Dose/wk</th><th>Units/wk</th><th>Detail</th><th>$/mo</th><th>Vial lasts</th></tr></thead>'+
+            '<tbody>'+phaseRows+'</tbody>'+
+          '</table>'+
+        '</div>'+
+      '</div>';
+    });
+
+    var totalWksAll=totw;
+    // Vial order pill labels
+    var orderPills=vialOrderParts.map(function(p,i){
+      return '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:'+(i===0?'#dbeafe':'#d1fae5')+';color:'+(i===0?'#1e40af':'#065f46')+';">'+(i===0?'★ Starter: ':'↺ Refill: ')+p+'</span>';
+    }).join(' → ');
+
+    html='<div class="card"><div class="ctitle">Optimal Vial Strategy &mdash; '+ph+' · '+pr.n+'</div>'+
+      // Strategy banner
+      '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--r);padding:10px 14px;margin-bottom:12px;">'+
+        '<div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px;">ℹ️ Recommended Vial Order</div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">'+orderPills+'</div>'+
+        '<div style="font-size:11px;color:#166534;margin-top:6px;">Starter = smallest vial (protects against early sensitivity). Refill = most cost-effective per mg.</div>'+
+      '</div>'+
+      '<div class="mg3">'+
+        '<div class="met"><div class="mlb">Total vials</div><div class="mvl">'+finalVialCount+'</div><div class="msb">'+vialOrderParts.join(', ')+'</div></div>'+
+        '<div class="met"><div class="mlb">Total weeks</div><div class="mvl">'+totalWksAll+'</div><div class="msb">'+phases.length+' phases · 3 wks each</div></div>'+
+        '<div class="met"><div class="mlb">Est. total cost</div><div class="mvl">$'+totalSpend.toFixed(0)+'</div><div class="msb">'+(sh?'incl. $'+sh+' ship/vial':'all vials included')+'</div></div>'+
+      '</div>'+
+      (sh?'<div class="wbox">⚠ +$'+sh+' shipping per vial order</div>':'')+
+      (over100phases.length?'<div class="wbox">⚠ '+over100phases.join(', ')+' require a higher concentration product (&gt;100 units). Your care team will advise when you reach that stage.</div>':'')+
+      (function(){
+        var phRows='';
+        phases.forEach(function(p){
+          var over=uu(p.mg,pr.c)>100;
+          if(over){
+            phRows+='<tr><td><strong>'+p.l+'</strong></td><td>'+p.mg+' mg</td>'+
+              '<td colspan="3"><span class="bdg bred">&gt;100u — higher concentration needed</span></td></tr>';
+            return;
+          }
+          var u=uu(p.mg,pr.c),vol=fvol(p.mg/pr.c);
+          var cpmStart=calcCPM(starterVial.p,starterVial.mg,p.mg,sh);
+          var cpmRefill=calcCPM(refillVial.p,refillVial.mg,p.mg,sh);
+          var durStart=fwks(starterVial.mg/p.mg);
+          var durRefill=fwks(refillVial.mg/p.mg);
+          var sameVial=starterVial.s===refillVial.s;
+          phRows+='<tr>'+
+            '<td><strong>'+p.l+'</strong><span style="color:#6b6b6b;font-size:11px;"> ('+p.wk+' wks)</span></td>'+
+            '<td>'+p.mg+' mg</td>'+
+            '<td><span class="bdg bbl">'+u+'u</span> <span style="font-size:11px;color:#6b6b6b;">'+vol+'</span></td>'+
+            '<td style="font-weight:700;color:#1e40af;font-size:13px;">~$'+cpmStart.toFixed(0)+'/mo<span style="font-size:10px;font-weight:400;color:#6b6b6b;display:block;">starter vial · lasts '+durStart+'</span></td>'+
+            (sameVial?'':'<td style="font-weight:700;color:#065f46;font-size:13px;">~$'+cpmRefill.toFixed(0)+'/mo<span style="font-size:10px;font-weight:400;color:#6b6b6b;display:block;">refill vial · lasts '+durRefill+'</span></td>')+
+            '</tr>';
+        });
+        var cols=starterVial.s===refillVial.s?
+          '<thead><tr><th>Phase</th><th>Dose/wk</th><th>Units/wk</th><th>Est. $/month &amp; vial duration</th></tr></thead>':
+          '<thead><tr><th>Phase</th><th>Dose/wk</th><th>Units/wk</th><th>★ Starter vial</th><th>↺ Refill vial</th></tr></thead>';
+        return '<div style="background:#fff;border:1px solid #e2e6ea;border-radius:12px;margin-bottom:14px;overflow:hidden;">'+
+          '<div style="background:#f7f7f5;padding:8px 14px;border-bottom:1px solid #e2e6ea;font-size:12px;font-weight:700;color:#6b6b6b;text-transform:uppercase;letter-spacing:.04em;">Cost at Each Phase</div>'+
+          '<div style="overflow-x:auto;"><table class="ptbl" style="min-width:420px;">'+cols+
+            '<tbody>'+phRows+'</tbody>'+
+          '</table></div>'+
+          '<p class="fn" style="padding:6px 14px 8px;">Monthly cost prorated at 4.33 wks/month. Duration = how long that vial size lasts at that phase dose.</p>'+
+        '</div>';
+      })()+
+      vialHtml+
+      '<p class="fn">Starter badge = smallest vial (first order only). Refill badge = most cost-effective size for all subsequent orders. Green bar = unused mg remaining.</p>'+
+      sumBtn('buildCostSummary()')+
+    '</div>';
+  }
+  document.getElementById('cOut').innerHTML=html;document.getElementById('cRes').classList.add('on');
+}
+
+/* SWITCH */
+function sSetDrug(d){sD=d;document.getElementById('sd-s').classList.toggle('on',d==='s');document.getElementById('sd-t').classList.toggle('on',d==='t');sInit();document.getElementById('sRes').classList.remove('on');document.getElementById('sUD').style.display='none';}
+function sInit(){
+  fillS('sFP',pks(sD),function(x){return x;},function(x){return x;});
+  sLFC();
+}
+function sLFC(){fillS('sFC',gpr(sD,document.getElementById('sFP').value),function(x,i){return i;},function(x){return x.n;});sLFV();}
+function sLFV(){var ph=document.getElementById('sFP').value,pi=parseInt(document.getElementById('sFC').value);fillS('sFV',gv(sD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});sShowU();}
+function sLTC(){try{fillS('sTC',gpr(sD,document.getElementById('sTP').value),function(x,i){return i;},function(x){return x.n;});sLTV();}catch(e){}}
+function sLTV(){try{var ph=document.getElementById('sTP').value,pi=parseInt(document.getElementById('sTC').value);fillS('sTV',gv(sD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});}catch(e){}}
+function sShowU(){
+  var uIn=parseInt(document.getElementById('sDose').value)||0;
+  var el=document.getElementById('sUD');
+  if(!uIn){el.style.display='none';return;}
+  var ph=document.getElementById('sFP').value,pi=parseInt(document.getElementById('sFC').value),pr=gpr(sD,ph)[pi];
+  var mgDose=parseFloat((uIn*pr.c/100).toFixed(4)),vol=fvol(uIn/100),over=uIn>100;
+  el.innerHTML='<div class="ubox"><div class="ubox-lbl">Current prescription — mg delivered at this concentration</div>'+
+    '<div class="ubox-val" style="color:'+(over?'#a32d2d':'#1a1a1a')+';">'+mgDose+' mg/week &nbsp;<span style="font-size:13px;font-weight:400;color:#6b6b6b;">'+vol+' drawn</span></div>'+
+    '<div class="ubox-sub">'+(over?'&#9888; Exceeds 100-unit limit':uIn+' units &times; '+pr.c+' mg/mL &divide; 100 = '+mgDose+' mg &nbsp;&middot;&nbsp; U-100 syringe')+'</div></div>';
+  el.style.display='block';
+}
+function doCS(){
+  var uIn=parseInt(document.getElementById('sDose').value)||20;
+  var fp=document.getElementById('sFP').value,fi=parseInt(document.getElementById('sFC').value),fvi=parseInt(document.getElementById('sFV').value);
+  var fv2=gv(sD,fp,fi)[fvi],fPr=gpr(sD,fp)[fi];
+  var mgDose=parseFloat((uIn*fPr.c/100).toFixed(4));
+  var fcp=calcCPM(fv2.p,fv2.mg,mgDose,gsh(sD,fp));
+  var fOver=uIn>100;
+
+  // Build ranked list of ALL alternatives across every active pharmacy/product/vial
+  var options=[];
+  Object.keys(DB[sD]).forEach(function(phName){
+    var phData=DB[sD][phName];
+    // Skip discontinued pharmacies as switch targets (but still include current even if disc)
+    if(phData.disc && phName!==fp) return;
+    // Include current pharmacy too (different product/vial might be cheaper)
+    phData.pr.forEach(function(prod,prodIdx){
+      var units=Math.round((mgDose/prod.c)*100);
+      if(units>100) return; // skip unusable concentrations
+      // Find best vial (cheapest $/mo) for this dose
+      var sh=phData.ship||0;
+      var validVials=prod.v.filter(function(v2){return v2.mg>=mgDose;});
+      if(!validVials.length) return;
+      var bestVialObj=validVials.reduce(function(a,b){
+        return calcCPM(a.p,a.mg,mgDose,sh)<=calcCPM(b.p,b.mg,mgDose,sh)?a:b;
+      });
+      var cpm=calcCPM(bestVialObj.p,bestVialObj.mg,mgDose,sh);
+      var dur=bestVialObj.mg/mgDose;
+      var isCurrent=(phName===fp && prodIdx===fi);
+      options.push({phName:phName,prod:prod,prodIdx:prodIdx,vial:bestVialObj,units:units,cpm:cpm,dur:dur,sh:sh,disc:phData.disc||0,badge:phData.badge,isCurrent:isCurrent});
+    });
+  });
+
+  // Sort by cpm ascending (cheapest first), current always shown separately
+  var currentOpt=options.find(function(o){return o.isCurrent;});
+  var altOpts=options.filter(function(o){return !o.isCurrent;}).sort(function(a,b){return a.cpm-b.cpm;});
+
+  // Badge colors map
+  var badgeMap={'bbl':'#dbeafe|#1e40af','bgr':'#d1fae5|#065f46','bam':'#fef3c7|#92400e','bpu':'#ede9fe|#5b21b6'};
+  function phBadge(badge,name){
+    var c=(badgeMap[badge]||'#f3f4f6|#374151').split('|');
+    return '<span style="display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;background:'+c[0]+';color:'+c[1]+';">'+name+'</span>';
+  }
+
+  // Render current row
+  var currentCpm=currentOpt?currentOpt.cpm:fcp;
+  function renderRow(o,rank){
+    var diff=o.cpm-currentCpm;
+    var isBest=!o.isCurrent&&rank===0;
+    var diffStr=o.isCurrent?'—':(diff<=0?'-$'+Math.abs(diff).toFixed(0)+'/mo':'+$'+diff.toFixed(0)+'/mo');
+    var diffColor=o.isCurrent?'#6b6b6b':diff<0?'#059669':diff>0?'#dc2626':'#6b6b6b';
+    var vol=fvol(mgDose/o.prod.c);
+    var border=isBest?'2px solid #059669':o.isCurrent?'2px solid #378add':'1px solid #e2e6ea';
+    var bg=isBest?'#f0fdf4':o.isCurrent?'#eff6ff':'#fff';
+    return '<div style="border:'+border+';border-radius:10px;padding:12px 14px;margin-bottom:8px;background:'+bg+';display:flex;flex-wrap:wrap;gap:10px;align-items:center;">'+
+      '<div style="flex:1;min-width:180px;">'+
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'+
+          (isBest?'<span style="font-size:11px;font-weight:700;background:#059669;color:#fff;padding:2px 7px;border-radius:20px;">BEST VALUE</span>':'')+
+          (o.isCurrent?'<span style="font-size:11px;font-weight:700;background:#378add;color:#fff;padding:2px 7px;border-radius:20px;">CURRENT</span>':'')+
+          (o.disc?'<span style="font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b;padding:2px 7px;border-radius:20px;">DISCONTINUED</span>':'')+
+          phBadge(o.badge,o.phName)+
+        '</div>'+
+        '<div style="font-size:13px;font-weight:600;color:#1a1a1a;">'+o.prod.n+'</div>'+
+        '<div style="font-size:12px;color:#6b6b6b;margin-top:2px;">Best vial: '+o.vial.s+' ($'+o.vial.p+(o.sh?' +$'+o.sh+' ship':'')+')</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">'+
+        '<div style="text-align:center;">'+
+          '<div style="font-size:11px;color:#6b6b6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Units/wk</div>'+
+          '<div style="font-size:15px;font-weight:700;"><span class="bdg bbl" style="font-size:13px;">'+o.units+'u</span></div>'+
+          '<div style="font-size:11px;color:#6b6b6b;">'+vol+'</div>'+
+        '</div>'+
+        '<div style="text-align:center;">'+
+          '<div style="font-size:11px;color:#6b6b6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Est. $/mo</div>'+
+          '<div style="font-size:18px;font-weight:800;color:'+(isBest?'#059669':o.isCurrent?'#1e40af':'#1a1a1a')+';">$'+o.cpm.toFixed(0)+'</div>'+
+        '</div>'+
+        '<div style="text-align:center;">'+
+          '<div style="font-size:11px;color:#6b6b6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Vial lasts</div>'+
+          '<div style="font-size:14px;font-weight:700;">'+fwks(o.dur)+'</div>'+
+        '</div>'+
+        '<div style="text-align:center;min-width:72px;">'+
+          '<div style="font-size:11px;color:#6b6b6b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;">vs. Current</div>'+
+          '<div style="font-size:15px;font-weight:800;color:'+diffColor+';">'+diffStr+'</div>'+
+        '</div>'+
+        (!o.isCurrent?'<button style="padding:6px 14px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" onclick="sSummarize('+sOptIdx+')">Use This</button>':'')+
+      '</div>'+
+    '</div>';
+  }
+
+  // Store alt options globally so sSummarize can look them up by index safely
+  window._sOpts=altOpts;
+  var sOptIdx=0;
+
+  var html='';
+  if(fOver) html+='<div class="wbox">&#9888; Current prescription exceeds 100-unit limit.</div>';
+
+  // Current pharmacy card
+  if(currentOpt){
+    html+=renderRow(currentOpt,null);
+  }
+
+  // Divider
+  html+='<div style="display:flex;align-items:center;gap:10px;margin:12px 0 10px;"><div style="flex:1;height:1px;background:#e2e6ea;"></div><span style="font-size:11px;font-weight:700;color:#6b6b6b;text-transform:uppercase;letter-spacing:.05em;">All Alternatives — ranked cheapest first</span><div style="flex:1;height:1px;background:#e2e6ea;"></div></div>';
+
+  if(altOpts.length===0){
+    html+='<div class="wbox">No alternatives available at this dose without exceeding 100 units.</div>';
+  } else {
+    altOpts.forEach(function(o,i){sOptIdx=i;html+=renderRow(o,i);});
+  }
+
+  html+='<p class="fn" style="margin-top:10px;">All options deliver <strong>'+mgDose+' mg/week</strong>. Units differ because concentrations differ. Best vial = lowest $/mo for that product. Click "Use This" to generate a patient summary.</p>';
+  html+=(DB[sD][fp].disc?'<div class="wbox" style="margin-top:6px;">&#9888; Current pharmacy is discontinued — use this for reference only.</div>':'');
+
+  document.getElementById('sOut').innerHTML=html;
+  document.getElementById('sRes').classList.add('on');
+}
+
+function sSummarize(idx){
+  var o=window._sOpts[idx];
+  if(!o) return;
+  var drug=sD;
+  var toPhData=DB[drug][o.phName];
+  var toProdIdx=0;
+  toPhData.pr.forEach(function(p,i){if(p.n===o.prod.n)toProdIdx=i;});
+  fillS('sTP',Object.keys(DB[drug]),function(x){return x;},function(x){return x;});
+  document.getElementById('sTP').value=o.phName;
+  fillS('sTC',toPhData.pr,function(x,i){return i;},function(x){return x.n;});
+  document.getElementById('sTC').value=toProdIdx;
+  var vials=toPhData.pr[toProdIdx].v;
+  fillS('sTV',vials,function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});
+  var fromPr=gpr(drug,document.getElementById('sFP').value)[parseInt(document.getElementById('sFC').value)];
+  var uIn=parseInt(document.getElementById('sDose').value)||20;
+  var mgD=parseFloat((uIn*fromPr.c/100).toFixed(4));
+  var bestVI=0,best=Infinity;
+  vials.forEach(function(v2,i){
+    if(v2.mg>=mgD){var c=calcCPM(v2.p,v2.mg,mgD,o.sh);if(c<best){best=c;bestVI=i;}}
+  });
+  document.getElementById('sTV').value=bestVI;
+  buildSwitchSummary();
+}
+
+/* MAINTENANCE */
+function mSetDrug(d){mD=d;document.getElementById('md-s').classList.toggle('on',d==='s');document.getElementById('md-t').classList.toggle('on',d==='t');mInit();document.getElementById('mRes').classList.remove('on');document.getElementById('mUD').style.display='none';}
+function mInit(){fillS('mPh',apks(mD),function(x){return x;},function(x){return x;});mLC();document.getElementById('mDose').value=mD==='s'?1.0:7.5;mShowU();}
+function mLC(){fillS('mCo',gpr(mD,document.getElementById('mPh').value),function(x,i){return i;},function(x){return x.n;});mLV();}
+function mLV(){var ph=document.getElementById('mPh').value,pi=parseInt(document.getElementById('mCo').value);fillS('mVi',gv(mD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});mShowU();}
+function mShowU(){
+  var dose=parseFloat(document.getElementById('mDose').value)||0;
+  var el=document.getElementById('mUD');
+  if(!dose){el.style.display='none';return;}
+  var ph=document.getElementById('mPh').value,pi=parseInt(document.getElementById('mCo').value),pr=gpr(mD,ph)[pi];
+  el.innerHTML=uBox('Units per maintenance injection (every other week)',uu(dose,pr.c),fvol(dose/pr.c),dose);
+  el.style.display='block';
+}
+function doCM(){
+  var ph=document.getElementById('mPh').value,pi=parseInt(document.getElementById('mCo').value),vi=parseInt(document.getElementById('mVi').value);
+  var dose=parseFloat(document.getElementById('mDose').value)||1.0;
+  var v=gv(mD,ph,pi)[vi],sh=gsh(mD,ph),pr=gpr(mD,ph)[pi];
+  var u=uu(dose,pr.c),vol=fvol(dose/pr.c),over=u>100;
+  var durWks=(v.mg/dose)*2,mCost=(v.p/(v.mg/dose))*2+(sh?(sh/((v.mg/dose)/2)):0);
+  var wCost=calcCPM(v.p,v.mg,dose,sh),sav=wCost-mCost;
+  var b=bestV(mD,ph,pi,dose),bMC=(b.v.p/(b.v.mg/dose))*2,bDur=(b.v.mg/dose)*2;
+  var html=(DB[mD][ph].disc?'<div class="wbox">&#9888; Pharmacy discontinued &mdash; for reference only.</div>':'')+
+    '<div class="gbox">&#10003; Maintenance: '+dose+' mg every other week &mdash; 2 injections/month.</div>'+
+    '<div class="card"><div class="ctitle">Maintenance &mdash; '+dose+' mg every other week</div>'+
+    '<div class="mg4"><div class="met"><div class="mlb">Monthly Cost</div><div class="mvl">$'+mCost.toFixed(0)+'</div></div>'+
+    '<div class="met"><div class="mlb">Vial Lasts</div><div class="mvl">'+durWks.toFixed(1)+' wks</div><div class="msb">~'+Math.round(durWks*7)+' days</div></div>'+
+    '<div class="met"><div class="mlb">Units / Injection</div><div class="mvl" '+(over?'style="color:#a32d2d;"':'')+'>'+u+' units</div><div class="msb">'+vol+(over?' &#9888;':'')+' </div></div>'+
+    '<div class="met"><div class="mlb">vs. Weekly Savings</div><div class="mvl" style="color:#27500a;">$'+sav.toFixed(0)+'/mo</div></div></div>'+
+    '<div class="rxb"><div class="rxbt">Rx Summary</div>'+
+    '<div class="rxbv">'+(mD==='s'?'Semaglutide':'Tirzepatide')+' '+pr.n+' &mdash; <span style="font-size:16px;">'+u+' units every other week</span> ('+vol+')</div>'+
+    '<div class="rxbs">Best vial: '+b.v.s+' &nbsp;&middot;&nbsp; ~$'+bMC.toFixed(0)+'/mo &nbsp;&middot;&nbsp; lasts '+fwks(bDur)+'</div></div>'+
+    (over?'<div class="wbox" style="margin-top:10px;">&#9888; '+u+' units exceeds 100-unit limit — consider a higher concentration product.</div>':'')+
+    (sh?'<div class="wbox" style="margin-top:10px;">&#9888; +$'+sh+' shipping/order</div>':'')+
+    '<p class="fn" style="margin-top:10px;">U-100 &middot; 1 unit = 0.01 mL &middot; 2 injections/month</p>'+
+    sumBtn('buildMaintSummary()')+'</div>';
+  document.getElementById('mOut').innerHTML=html;document.getElementById('mRes').classList.add('on');
+}
+
+/* UNIT REFERENCE */
+function uSetDrug(d){uD=d;document.getElementById('ud-s').classList.toggle('on',d==='s');document.getElementById('ud-t').classList.toggle('on',d==='t');doRU();}
+function doRU(){
+  var phases=PH[uD],html='';
+  Object.keys(DB[uD]).forEach(function(pn){
+    var pd=DB[uD][pn];
+    if(pd.disc) return;
+    html+='<div style="margin:1.25rem 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+
+      '<span style="font-size:14px;font-weight:600;">'+pn+'</span>'+
+      (pd.ship?'<span class="bdg bam">+$'+pd.ship+' shipping</span>':'')+
+      (pd.disc?'<span class="bdg bred">Discontinued</span>':'')+
+    '</div>';
+    pd.pr.forEach(function(pr,prodIdx){
+      var rows='',skipped=0;
+      phases.forEach(function(ph){
+        var u=uu(ph.mg,pr.c);
+        if(u>100){skipped++;return;}
+        var vol=fvol(ph.mg/pr.c),b=bestV(uD,pn,prodIdx,ph.mg);
+        var bvl=b.v.s,bcp=b.c?'$'+b.c.toFixed(0)+'/mo':'—',bdur=b.v.mg>=ph.mg?fwks(b.v.mg/ph.mg):'&lt;1 wk';
+        if(b.v.mg<ph.mg){bvl+=' &#9888;';bcp='—';}
+        rows+='<tr><td>'+ph.l+'</td><td>'+ph.mg+' mg</td>'+
+          '<td><span class="bdg '+pd.badge+'">'+u+' units</span><br><span style="font-size:11px;color:#6b6b6b;">'+vol+'</span></td>'+
+          '<td style="font-size:11px;">'+bvl+'</td><td style="font-size:12px;">'+bcp+'</td><td style="font-size:12px;">'+bdur+'</td></tr>';
+      });
+      html+='<div style="background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px;">'+
+        '<div style="font-size:13px;font-weight:600;margin-bottom:10px;">'+pr.n+' <span style="font-weight:400;color:#6b6b6b;">('+pr.c+' mg/mL)</span>'+
+        (skipped?'<span class="bdg" style="background:#fff8e6;color:#92600a;margin-left:8px;">'+skipped+' phase'+(skipped>1?'s':'')+' hidden &gt;100u</span>':'')+
+        '</div>'+
+        (rows?'<div style="overflow-x:auto;"><table class="ptbl" style="min-width:480px;">'+
+          '<colgroup><col style="width:14%"><col style="width:13%"><col style="width:19%"><col style="width:30%"><col style="width:12%"><col style="width:12%"></colgroup>'+
+          '<thead><tr><th>Phase</th><th>Dose/wk</th><th>Units/wk</th><th>Best vial</th><th>$/mo</th><th>Lasts</th></tr></thead>'+
+          '<tbody>'+rows+'</tbody></table></div>':
+          '<div class="wbox" style="margin-bottom:4px;">All phases exceed 100 units — not usable at these dose levels.</div>')+
+        '<p class="fn" style="margin-top:8px;">U-100 &middot; 1 unit = 0.01 mL &middot; best vial = lowest $/month &middot; each phase = 3 wks'+(skipped?' &middot; phases &gt;100u hidden':'')+' </p></div>';
+    });
+  });
+  document.getElementById('uOut').innerHTML=html;
+}
+
+document.getElementById('sFP').addEventListener('change',function(){sLFC();sShowU();});
+document.getElementById('sFC').addEventListener('change',function(){sLFV();sShowU();});
+document.getElementById('sTP').addEventListener('change',sLTC);
+document.getElementById('sTC').addEventListener('change',sLTV);
+document.getElementById('mPh').addEventListener('change',function(){mLC();mShowU();});
+document.getElementById('mCo').addEventListener('change',function(){mLV();mShowU();});
+document.getElementById('cPh').addEventListener('change',cLC);
+document.getElementById('cCo').addEventListener('change',cLV);
+document.getElementById('cMo').addEventListener('change',cTog);
+cInit();sInit();mInit();doRU();
+</script>
+</body>
+</html>
