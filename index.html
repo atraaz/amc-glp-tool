@@ -201,11 +201,7 @@ var PH={
 };
 var DB={
   s:{
-    'Val Vista':{badge:'bbl',disc:0,ship:0,pr:[
-      {n:'Sema/Methylcobalamin 1.76 mg/100 mcg/mL',c:1.76,v:[{s:'2 mL (3.52 mg)',mg:3.52,p:200}]},
-      {n:'Sema/Methylcobalamin 5.34 mg/100 mcg/mL',c:5.34,v:[{s:'2 mL (10.68 mg)',mg:10.68,p:250}]},
-      {n:'2.5 mg/mL (discontinued)',c:2.5,disc:1,v:[{s:'5 mL (12.5 mg)',mg:12.5,p:225}]}
-    ]},
+    'Val Vista':{badge:'bam',disc:1,ship:0,note:'Val Vista Semaglutide fully discontinued. Select as current pharmacy to convert patient to a new pharmacy.',pr:[{n:'2.5 mg/mL (discontinued)',c:2.5,v:[{s:'5 mL (12.5 mg)',mg:12.5,p:225}]}]},
     'Empower':{badge:'bgr',disc:0,ship:0,pr:[
       {n:'1 mg/mL (1/0.5)',c:1,v:[{s:'1 mL (1 mg)',mg:1,p:86.63},{s:'2.5 mL (2.5 mg)',mg:2.5,p:108.85}]},
       {n:'5 mg/mL (5/0.5)',c:5,v:[{s:'1 mL (5 mg)',mg:5,p:120.94},{s:'2.5 mL (12.5 mg)',mg:12.5,p:200.83}]}
@@ -216,8 +212,9 @@ var DB={
   },
   t:{
     'Val Vista':{badge:'bbl',disc:0,ship:0,pr:[
-      {n:'Tirz/Methylcobalamin 26.4 mg/100 mcg/mL',c:26.4,v:[{s:'2 mL (52.8 mg)',mg:52.8,p:350}]},
-      {n:'Tirz/B6 10 mg/mL',c:10,v:[{s:'1 mL (10 mg)',mg:10,p:175}]},
+      {n:'Tirz/B6 10 mg/mL (discontinued)',c:10,disc:1,v:[{s:'1 mL (10 mg)',mg:10,p:175}]},
+      {n:'Tirz/Methylcobalamin 13.2 mg/100mcg/mL',c:13.2,v:[{s:'2 mL (26.4 mg)',mg:26.4,p:275}]},
+      {n:'Tirz/Methylcobalamin 26.4 mg/100mcg/mL',c:26.4,v:[{s:'2 mL (52.8 mg)',mg:52.8,p:350}]},
       {n:'Tirz/B6 20 mg/mL (discontinued)',c:20,disc:1,v:[{s:'3 mL (60 mg)',mg:60,p:550}]}
     ]},
     'Empower':{badge:'bgr',disc:0,ship:0,pr:[
@@ -246,6 +243,7 @@ function showTab(t){
 function pks(d){return Object.keys(DB[d]);}
 function apks(d){return Object.keys(DB[d]).filter(function(k){return !DB[d][k].disc;});}
 function gpr(d,ph){return DB[d][ph].pr;}
+function apr(d,ph){return gpr(d,ph).map(function(x,i){return {p:x,i:i};}).filter(function(o){return !o.p.disc;});}
 function gv(d,ph,pi){return gpr(d,ph)[pi].v;}
 function gsh(d,ph){return DB[d][ph].ship||0;}
 function uu(mg,conc){return Math.round(Math.round((mg/conc)*100)/5)*5;}
@@ -440,7 +438,7 @@ function buildMaintSummary(){
 /* COST */
 function cSetDrug(d){cD=d;document.getElementById('cd-s').classList.toggle('on',d==='s');document.getElementById('cd-t').classList.toggle('on',d==='t');cInit();document.getElementById('cRes').classList.remove('on');}
 function cInit(){fillS('cPh',apks(cD),function(x){return x;},function(x){return x;});cLC();fillS('cPh2',PH[cD],function(x,i){return i;},function(x){return x.l+' ('+x.mg+' mg/wk)';});}
-function cLC(){fillS('cCo',gpr(cD,document.getElementById('cPh').value),function(x,i){return i;},function(x){return x.n;});cLV();}
+function cLC(){fillS('cCo',apr(cD,document.getElementById('cPh').value),function(o){return o.i;},function(o){return o.p.n;});cLV();}
 function cLV(){var ph=document.getElementById('cPh').value,pi=parseInt(document.getElementById('cCo').value);fillS('cVi',gv(cD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});}
 function cTog(){
   var mode=document.getElementById('cMo').value;
@@ -818,7 +816,7 @@ function sSummarize(idx){
 /* MAINTENANCE */
 function mSetDrug(d){mD=d;document.getElementById('md-s').classList.toggle('on',d==='s');document.getElementById('md-t').classList.toggle('on',d==='t');mInit();document.getElementById('mRes').classList.remove('on');document.getElementById('mUD').style.display='none';}
 function mInit(){fillS('mPh',apks(mD),function(x){return x;},function(x){return x;});mLC();document.getElementById('mDose').value=mD==='s'?1.0:7.5;mShowU();}
-function mLC(){fillS('mCo',gpr(mD,document.getElementById('mPh').value),function(x,i){return i;},function(x){return x.n;});mLV();}
+function mLC(){fillS('mCo',apr(mD,document.getElementById('mPh').value),function(o){return o.i;},function(o){return o.p.n;});mLV();}
 function mLV(){var ph=document.getElementById('mPh').value,pi=parseInt(document.getElementById('mCo').value);fillS('mVi',gv(mD,ph,pi),function(x,i){return i;},function(x){return x.s+' — $'+x.p.toFixed(2);});mShowU();}
 function mShowU(){
   var dose=parseFloat(document.getElementById('mDose').value)||0;
